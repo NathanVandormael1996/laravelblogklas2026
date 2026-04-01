@@ -21,12 +21,14 @@ class UpdatePostRequest extends FormRequest
         $title = trim((string) $this->input('title', ''));
         $slug = trim((string) $this->input('slug', ''));
         $isPublished = $this->boolean('is_published');
+        $isFeatured = $this->boolean('is_featured');
         $publishedAt = $this->input('published_at');
 
         $this->merge([
             'title' => $title,
             'slug' => $slug !== '' ? Str::slug($slug) : Str::slug($title),
             'is_published' => $isPublished,
+            'is_featured' => $isFeatured,
             'categories' => $this->input('categories', []),
             'published_at' => $isPublished
                 ? ($publishedAt ?: now())
@@ -52,7 +54,9 @@ class UpdatePostRequest extends FormRequest
             'body' => ['required', 'string', 'min:10'],
 
             'is_published' => ['required', 'boolean'],
+            'is_featured' => ['required', 'boolean'],
             'published_at' => ['nullable', 'date'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
 
             'categories' => ['nullable', 'array'],
             'categories.*' => ['integer', Rule::exists('categories', 'id')],

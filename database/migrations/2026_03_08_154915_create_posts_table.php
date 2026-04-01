@@ -38,14 +38,15 @@ return new class extends Migration
             $table->longText('body');
 
             $table->boolean('is_published')->default(false);
+            $table->boolean('is_featured')->default(false);
             $table->timestamp('published_at')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
 
-            // Indexen voor filters en sortering in de backend
             $table->index('title');
             $table->index('is_published');
+            $table->index('is_featured');
             $table->index('published_at');
             $table->index('created_at');
         });

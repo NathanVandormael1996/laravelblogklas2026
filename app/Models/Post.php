@@ -26,6 +26,7 @@ class Post extends Model
         'excerpt',
         'body',
         'is_published',
+        'is_featured',
         'published_at',
         'created_by',
         'updated_by',
@@ -38,6 +39,7 @@ class Post extends Model
     {
         return [
             'is_published' => 'boolean',
+            'is_featured' => 'boolean',
             'published_at' => 'datetime',
         ];
     }

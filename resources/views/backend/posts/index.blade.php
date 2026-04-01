@@ -130,6 +130,7 @@
                         <th><a class="text-decoration-none" href="{{ $sortUrl('title') }}">Title{!! $sortIcon('title') !!}</a></th>
                         <th>Author</th>
                         <th>Categories</th>
+                        <th><a class="text-decoration-none" href="{{ $sortUrl('is_featured') }}">Featured{!! $sortIcon('is_featured') !!}</a></th>
                         <th><a class="text-decoration-none" href="{{ $sortUrl('is_published') }}">Status{!! $sortIcon('is_published') !!}</a></th>
                         <th><a class="text-decoration-none" href="{{ $sortUrl('published_at') }}">Published{!! $sortIcon('published_at') !!}</a></th>
                         <th><a class="text-decoration-none" href="{{ $sortUrl('created_at') }}">Created{!! $sortIcon('created_at') !!}</a></th>
@@ -171,6 +172,14 @@
                                 @empty
                                     -
                                 @endforelse
+                            </td>
+
+                            <td>
+                                @if($post->is_featured)
+                                    <span class="badge bg-warning text-dark">featured</span>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
                             </td>
 
                             <td>
@@ -240,7 +249,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center text-muted py-4">
+                            <td colspan="10" class="text-center text-muted py-4">
                                 No posts found. Try clearing filters.
                             </td>
                         </tr>
