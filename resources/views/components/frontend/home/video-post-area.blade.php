@@ -10,16 +10,20 @@
                     <div class="single-video-post">
                         @if($post->media)
                             <div class="video-post-thumb">
-                                <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                <a href="{{ route('posts.show', $post->slug) }}">
+                                    <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                </a>
                             </div>
                         @else
                             <div class="video-post-thumb">
-                                <img src="{{ asset('frontend/gazette/img/blog-img/bitcoin.jpg') }}" alt="{{ $post->title }}">
+                                <a href="{{ route('posts.show', $post->slug) }}">
+                                    <img src="{{ asset('frontend/gazette/img/blog-img/bitcoin.jpg') }}" alt="{{ $post->title }}">
+                                </a>
                             </div>
                         @endif
 
                         <h5>
-                            <a href="#">{{ $post->title }}</a>
+                            <a href="{{ route('posts.show', $post->slug) }}">{{ $post->title }}</a>
                         </h5>
                     </div>
                 </div>

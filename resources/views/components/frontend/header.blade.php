@@ -7,9 +7,9 @@
                         <h5 class="breaking-news-title">Breaking news</h5>
                         <div id="breakingNewsTicker" class="ticker">
                             <ul>
-                                <li><a href="#">Welkom op onze Laravel blogfrontend.</a></li>
-                                <li><a href="#">We zetten de Gazette homepagina stap voor stap om.</a></li>
-                                <li><a href="#">Nieuwe artikels verschijnen hier automatisch.</a></li>
+                                <li><a href="{{ route('posts.index') }}">Welkom op onze Laravel blogfrontend.</a></li>
+                                <li><a href="{{ route('posts.index') }}">We zetten de Gazette homepagina stap voor stap om.</a></li>
+                                <li><a href="{{ route('posts.index') }}">Nieuwe artikels verschijnen hier automatisch.</a></li>
                             </ul>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
 
                 <div class="col-12 col-md-8">
                     <div class="header-advert-area">
-                        <a href="#">
+                        <a href="{{ route('home') }}">
                             <img src="{{ asset('frontend/gazette/img/bg-img/top-advert.png') }}" alt="advertentie">
                         </a>
                     </div>
@@ -112,8 +112,14 @@
                                 </ul>
 
                                 <div class="header-search-form mr-auto">
-                                    <form action="#" method="post">
-                                        <input type="search" placeholder="Input your keyword then press enter..." id="search" name="search">
+                                    <form action="{{ route('posts.index') }}" method="GET">
+                                        <input
+                                            type="search"
+                                            placeholder="Input your keyword then press enter..."
+                                            id="search"
+                                            name="search"
+                                            value="{{ request('search') }}"
+                                        >
                                     </form>
                                 </div>
 

@@ -8,7 +8,7 @@
             <ul class="marquee-content-items">
                 @forelse($latestPosts->take(6) as $post)
                     <li>
-                        <a href="#">
+                        <a href="{{ route('posts.show', $post->slug) }}">
                             <span class="latest-news-time">
                                 {{ optional($post->published_at)->format('H:i') }}
                             </span>
@@ -17,7 +17,7 @@
                     </li>
                 @empty
                     <li>
-                        <a href="#">
+                        <a href="{{ route('posts.index') }}">
                             <span class="latest-news-time">{{ now()->format('H:i') }}</span>
                             Nog geen recente artikels beschikbaar.
                         </a>

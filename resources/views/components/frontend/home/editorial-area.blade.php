@@ -11,23 +11,25 @@
                         <div class="editorial-post-single-slide">
                             @if($post->media)
                                 <div class="editorial-post-thumb">
-                                    <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                    <a href="{{ route('posts.show', $post->slug) }}">
+                                        <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                    </a>
                                 </div>
                             @endif
 
                             <div class="editorial-post-content">
                                 <div class="gazette-post-tag">
                                     @foreach($post->categories->take(1) as $category)
-                                        <a href="#">{{ $category->name }}</a>
+                                        <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
                                     @endforeach
                                 </div>
 
                                 <h4>
-                                    <a href="#" class="font-pt">{{ $post->title }}</a>
+                                    <a href="{{ route('posts.show', $post->slug) }}" class="font-pt">{{ $post->title }}</a>
                                 </h4>
 
                                 <p>
-                                    {{ $post->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($post->body), 100) }}
+                                    {{ $post->excerpt ?: Str::limit(strip_tags($post->body), 100) }}
                                 </p>
                             </div>
                         </div>
@@ -35,7 +37,7 @@
                         <div class="editorial-post-single-slide">
                             <div class="editorial-post-content">
                                 <h4>
-                                    <a href="#" class="font-pt">Nog geen editorial posts beschikbaar</a>
+                                    <a href="{{ route('posts.index') }}" class="font-pt">Nog geen editorial posts beschikbaar</a>
                                 </h4>
                             </div>
                         </div>

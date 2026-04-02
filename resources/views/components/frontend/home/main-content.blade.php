@@ -18,11 +18,13 @@
                     <div class="gazette-welcome-post">
                         <div class="gazette-post-tag">
                             @foreach($welcomePost->categories->take(1) as $category)
-                                <a href="#">{{ $category->name }}</a>
+                                <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
                             @endforeach
                         </div>
 
-                        <h2 class="font-pt">{{ $welcomePost->title }}</h2>
+                        <h2 class="font-pt">
+                            <a href="{{ route('posts.show', $welcomePost->slug) }}" style="color: inherit;">{{ $welcomePost->title }}</a>
+                        </h2>
 
                         <p class="gazette-post-date">
                             {{ optional($welcomePost->published_at)->format('F d, Y') }}
@@ -30,12 +32,14 @@
 
                         @if($welcomePost->media)
                             <div class="blog-post-thumbnail my-4">
-                                <img src="{{ $welcomePost->media->url() }}" alt="{{ $welcomePost->title }}">
+                                <a href="{{ route('posts.show', $welcomePost->slug) }}">
+                                    <img src="{{ $welcomePost->media->url() }}" alt="{{ $welcomePost->title }}">
+                                </a>
                             </div>
                         @endif
 
                         <p>
-                            {{ $welcomePost->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($welcomePost->body), 220) }}
+                            {{ $welcomePost->excerpt ?: Str::limit(strip_tags($welcomePost->body), 220) }}
                         </p>
                     </div>
                 @endif
@@ -47,19 +51,21 @@
                                 <div class="gazette-single-todays-post d-md-flex mb-30">
                                     @if($post->media)
                                         <div class="todays-post-thumb">
-                                            <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                            <a href="{{ route('posts.show', $post->slug) }}">
+                                                <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                            </a>
                                         </div>
                                     @endif
 
                                     <div class="todays-post-content">
                                         <div class="gazette-post-tag">
                                             @foreach($post->categories->take(1) as $category)
-                                                <a href="#">{{ $category->name }}</a>
+                                                <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
                                             @endforeach
                                         </div>
 
                                         <h4>
-                                            <a href="#" class="font-pt mb-2">{{ $post->title }}</a>
+                                            <a href="{{ route('posts.show', $post->slug) }}" class="font-pt mb-2">{{ $post->title }}</a>
                                         </h4>
 
                                         <span class="gazette-post-date mb-2 d-block">
@@ -67,7 +73,7 @@
                                         </span>
 
                                         <p class="mb-0">
-                                            {{ $post->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($post->body), 100) }}
+                                            {{ $post->excerpt ?: Str::limit(strip_tags($post->body), 100) }}
                                         </p>
                                     </div>
                                 </div>
@@ -81,13 +87,15 @@
                                 <div class="gazette-single-todays-post d-md-flex mb-30">
                                     @if($post->media)
                                         <div class="todays-post-thumb">
-                                            <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                            <a href="{{ route('posts.show', $post->slug) }}">
+                                                <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                            </a>
                                         </div>
                                     @endif
 
                                     <div class="todays-post-content">
                                         <h4>
-                                            <a href="#" class="font-pt mb-2">{{ $post->title }}</a>
+                                            <a href="{{ route('posts.show', $post->slug) }}" class="font-pt mb-2">{{ $post->title }}</a>
                                         </h4>
 
                                         <span class="gazette-post-date mb-2 d-block">
@@ -111,19 +119,21 @@
                                 <div class="gazette-single-catagory-post d-flex flex-wrap mb-30">
                                     @if($post->media)
                                         <div class="single-catagory-post-thumb">
-                                            <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                            <a href="{{ route('posts.show', $post->slug) }}">
+                                                <img src="{{ $post->media->url() }}" alt="{{ $post->title }}">
+                                            </a>
                                         </div>
                                     @endif
 
                                     <div class="single-catagory-post-content">
                                         <div class="gazette-post-tag">
                                             @foreach($post->categories->take(1) as $category)
-                                                <a href="#">{{ $category->name }}</a>
+                                                <a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a>
                                             @endforeach
                                         </div>
 
                                         <h5>
-                                            <a href="#" class="font-pt">{{ $post->title }}</a>
+                                            <a href="{{ route('posts.show', $post->slug) }}" class="font-pt">{{ $post->title }}</a>
                                         </h5>
 
                                         <span class="gazette-post-date">
@@ -150,7 +160,7 @@
 
                         @forelse($categories as $category)
                             <div class="single-breaking-news-widget">
-                                <a href="#" class="font-pt">{{ $category->name }}</a>
+                                <a href="{{ route('categories.show', $category->slug) }}" class="font-pt">{{ $category->name }}</a>
                                 <span>{{ $category->posts_count }} post(s)</span>
                             </div>
                         @empty
@@ -164,7 +174,9 @@
                         </div>
 
                         <div class="single-dont-miss-post-thumb">
-                            <img src="{{ asset('frontend/gazette/img/bg-img/add.png') }}" alt="advertentie">
+                            <a href="{{ route('posts.index') }}">
+                                <img src="{{ asset('frontend/gazette/img/bg-img/add.png') }}" alt="advertentie">
+                            </a>
                         </div>
                     </div>
                 </div>
