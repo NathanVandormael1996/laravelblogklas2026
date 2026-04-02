@@ -103,7 +103,7 @@
                                         </span>
 
                                         <p class="mb-0">
-                                            {{ $post->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($post->body), 100) }}
+                                            {{ $post->excerpt ?: Str::limit(strip_tags($post->body), 100) }}
                                         </p>
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@
                                         </span>
 
                                         <p>
-                                            {{ $post->excerpt ?: \Illuminate\Support\Str::limit(strip_tags($post->body), 110) }}
+                                            {{ $post->excerpt ?: Str::limit(strip_tags($post->body), 110) }}
                                         </p>
                                     </div>
                                 </div>
@@ -149,6 +149,15 @@
                         @endforeach
                     </div>
                 </div>
+
+                <div class="row mt-4 mb-5 pb-4">
+                    <div class="col-12 text-center">
+                        <a href="{{ route('posts.index') }}" class="btn btn-dark font-pt" style="font-size: 1.1rem; padding: 10px 30px;">
+                            Bekijk het algemene postenoverzicht <i class="fa fa-angle-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+
             </div>
 
             <div class="col-12 col-lg-3 col-md-6">
