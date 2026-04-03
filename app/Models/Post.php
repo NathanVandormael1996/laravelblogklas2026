@@ -1,9 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Models;
 
 use App\Concerns\RecordUserActivity;
 use App\Services\MediaService;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,8 +16,8 @@ use Illuminate\Support\Str;
 
 class Post extends Model
 {
-    use SoftDeletes;
     use RecordUserActivity;
+    use SoftDeletes;
 
     /**
      * Velden die via mass assignment ingevuld mogen worden.
@@ -108,7 +111,8 @@ class Post extends Model
     /**
      * Zoekscope voor vrije tekst.
      */
-    public function scopeSearch(Builder $query, string $q): Builder
+    #[Scope]
+    protected function search(Builder $query, string $q): Builder
     {
         $q = trim($q);
 
@@ -127,7 +131,8 @@ class Post extends Model
     /**
      * Filter op auteur.
      */
-    public function scopeAuthorFilter(Builder $query, ?int $userId): Builder
+    #[Scope]
+    protected function authorFilter(Builder $query, ?int $userId): Builder
     {
         if (! $userId) {
             return $query;
@@ -139,7 +144,8 @@ class Post extends Model
     /**
      * Filter op publicatiestatus.
      */
-    public function scopeStatusFilter(Builder $query, ?string $status): Builder
+    #[Scope]
+    protected function statusFilter(Builder $query, ?string $status): Builder
     {
         if (! $status) {
             return $query;
@@ -155,7 +161,8 @@ class Post extends Model
     /**
      * Filter op category.
      */
-    public function scopeCategoryFilter(Builder $query, ?int $categoryId): Builder
+    #[Scope]
+    protected function categoryFilter(Builder $query, ?int $categoryId): Builder
     {
         if (! $categoryId) {
             return $query;
@@ -169,7 +176,8 @@ class Post extends Model
     /**
      * Filter op soft deleted records.
      */
-    public function scopeTrashedFilter(Builder $query, ?string $trashed): Builder
+    #[Scope]
+    protected function trashedFilter(Builder $query, ?string $trashed): Builder
     {
         if (! $trashed) {
             return $query;
@@ -185,7 +193,8 @@ class Post extends Model
     /**
      * Veilige sortering op whitelisted kolommen.
      */
-    public function scopeSortBySafe(Builder $query, string $sort, string $dir): Builder
+    #[Scope]
+    protected function sortBySafe(Builder $query, string $sort, string $dir): Builder
     {
         $allowed = ['id', 'title', 'slug', 'created_at', 'published_at', 'is_published'];
 
@@ -197,6 +206,7 @@ class Post extends Model
 
         return $query->orderBy($sort, $dir);
     }
+
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');

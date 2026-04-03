@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
@@ -9,7 +11,6 @@ use Illuminate\View\View;
 
 class PostController extends Controller
 {
-
     public function index(Request $request): View
     {
         $query = Post::query()
@@ -30,15 +31,15 @@ class PostController extends Controller
 
         $posts = $query->paginate(12)->withQueryString();
 
-        return view('frontend.posts.index', compact('posts'));
+        return view('frontend.posts.index', ['posts' => $posts]);
     }
 
     public function show(Post $post): View
     {
-        if (!$post->is_published || !$post->published_at) {
+        if (! $post->is_published || ! $post->published_at) {
             abort(404);
         }
 
-        return view('frontend.posts.show', compact('post'));
+        return view('frontend.posts.show', ['post' => $post]);
     }
 }

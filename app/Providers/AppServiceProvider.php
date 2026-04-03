@@ -29,9 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
-        Gate::define('view-backend-dashboard', function (User $user): bool {
-            return in_array($user->role?->name, ['admin', 'editor'], true);
-        });
+        Gate::define('view-backend-dashboard', fn (User $user): bool => in_array($user->role?->name, ['admin', 'editor'], true));
         Paginator::useBootstrapFive();
     }
 

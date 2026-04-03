@@ -7,10 +7,10 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Services\MediaService;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,7 +21,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -85,6 +85,7 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
     /**
      * Relatie: één user kan meerdere posts schrijven.
      */
@@ -92,11 +93,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Post::class);
     }
+
     public function media(): MorphOne
     {
         return $this->morphOne(Media::class, 'mediable');
     }
-    public function scopeSearch(Builder $query, string $q): Builder
+
+    #[Scope]
+    protected function search(Builder $query, string $q): Builder
     {
         $q = trim($q);
 
@@ -110,7 +114,8 @@ class User extends Authenticatable
         });
     }
 
-    public function scopeRoleFilter(Builder $query, ?int $roleId): Builder
+    #[Scope]
+    protected function roleFilter(Builder $query, ?int $roleId): Builder
     {
         if (! $roleId) {
             return $query;
@@ -119,7 +124,8 @@ class User extends Authenticatable
         return $query->where('role_id', $roleId);
     }
 
-    public function scopeStatusFilter(Builder $query, ?string $status): Builder
+    #[Scope]
+    protected function statusFilter(Builder $query, ?string $status): Builder
     {
         if (! $status) {
             return $query;
@@ -132,7 +138,8 @@ class User extends Authenticatable
         };
     }
 
-    public function scopeVerifiedFilter(Builder $query, ?string $verified): Builder
+    #[Scope]
+    protected function verifiedFilter(Builder $query, ?string $verified): Builder
     {
         if (! $verified) {
             return $query;
@@ -144,7 +151,9 @@ class User extends Authenticatable
             default => $query,
         };
     }
-    public function scopeTrashedFilter(Builder $query, ?string $trashed): Builder
+
+    #[Scope]
+    protected function trashedFilter(Builder $query, ?string $trashed): Builder
     {
         if (! $trashed) {
             return $query;
@@ -156,7 +165,9 @@ class User extends Authenticatable
             default => $query,
         };
     }
-    public function scopeSortBySafe(Builder $query, string $sort, string $dir): Builder
+
+    #[Scope]
+    protected function sortBySafe(Builder $query, string $sort, string $dir): Builder
     {
         // Extra defensief, zelfs al valideert de FormRequest dit al
         $allowed = ['id', 'name', 'email', 'created_at', 'is_active'];
@@ -169,6 +180,7 @@ class User extends Authenticatable
 
         return $query->orderBy($sort, $dir);
     }
+
     protected static function booted()
     {
         static::forceDeleted(function ($user) {
@@ -183,7 +195,4 @@ class User extends Authenticatable
 
         });
     }
-
-
-
 }

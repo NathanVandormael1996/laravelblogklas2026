@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,7 +25,8 @@ class Role extends Model
         return $this->hasMany(User::class);
     }
 
-    public function scopeSearch(Builder $query, string $q): Builder
+    #[Scope]
+    protected function search(Builder $query, string $q): Builder
     {
         $q = trim($q);
 
@@ -38,7 +40,8 @@ class Role extends Model
         });
     }
 
-    public function scopeTrashedFilter(Builder $query, ?string $trashed): Builder
+    #[Scope]
+    protected function trashedFilter(Builder $query, ?string $trashed): Builder
     {
         if (! $trashed) {
             return $query;
@@ -51,7 +54,8 @@ class Role extends Model
         };
     }
 
-    public function scopeSortBySafe(Builder $query, string $sort, string $dir): Builder
+    #[Scope]
+    protected function sortBySafe(Builder $query, string $sort, string $dir): Builder
     {
         $allowed = ['id', 'name', 'created_at'];
 

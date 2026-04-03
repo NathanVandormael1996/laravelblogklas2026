@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostIndexRequest;
@@ -13,12 +15,7 @@ use Throwable;
 
 class PostController extends Controller
 {
-    protected PostService $postService;
-
-    public function __construct(PostService $postService)
-    {
-        $this->postService = $postService;
-    }
+    public function __construct(protected PostService $postService) {}
 
     /**
      * Display a listing of the resource.
@@ -171,7 +168,7 @@ class PostController extends Controller
             return redirect()
                 ->route('backend.posts.index')
                 ->with('success', "Post '{$post->title}' deleted successfully.");
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return back()
                 ->with('error', 'Post could not be deleted.');
         }
@@ -192,7 +189,7 @@ class PostController extends Controller
             return redirect()
                 ->route('backend.posts.index')
                 ->with('success', "Post '{$post->title}' restored successfully.");
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return back()
                 ->with('error', 'Post could not be restored.');
         }
@@ -215,7 +212,7 @@ class PostController extends Controller
             return redirect()
                 ->route('backend.posts.index')
                 ->with('success', "Post '{$title}' permanently deleted.");
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return back()
                 ->with('error', 'Post could not be permanently deleted.');
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
@@ -67,12 +69,12 @@ class HomeController extends Controller
             ->get();
 
         return view('frontend.home', [
-            'featuredPosts'   => $featuredPosts,
-            'latestPosts'     => $latestPosts,
-            'categoryPosts'   => $categoryPosts,
-            'videoPosts'      => $videoPosts,
-            'editorialPosts'  => $editorialPosts,
-            'categories'      => $categories,
+            'featuredPosts' => $featuredPosts,
+            'latestPosts' => $latestPosts,
+            'categoryPosts' => $categoryPosts,
+            'videoPosts' => $videoPosts,
+            'editorialPosts' => $editorialPosts,
+            'categories' => $categories,
         ]);
     }
 

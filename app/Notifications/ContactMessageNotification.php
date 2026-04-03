@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
@@ -11,12 +13,7 @@ class ContactMessageNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public array $data;
-
-    public function __construct(array $data)
-    {
-        $this->data = $data;
-    }
+    public function __construct(public array $data) {}
 
     public function via(object $notifiable): array
     {
@@ -28,8 +25,8 @@ class ContactMessageNotification extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject('Nieuw contactbericht')
             ->greeting('Er is een nieuw contactbericht binnengekomen.')
-            ->line('Naam: ' . $this->data['name'])
-            ->line('E-mail: ' . $this->data['email'])
+            ->line('Naam: '.$this->data['name'])
+            ->line('E-mail: '.$this->data['email'])
             ->line('Bericht:')
             ->line($this->data['message']);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Events\PostCreated;
@@ -10,12 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class PostService
 {
-    protected MediaService $mediaService;
-
-    public function __construct(MediaService $mediaService)
-    {
-        $this->mediaService = $mediaService;
-    }
+    public function __construct(protected MediaService $mediaService) {}
 
     public function create(array $data): Post
     {
@@ -49,7 +46,7 @@ class PostService
 
     public function update(Post $post, array $data): Post
     {
-        return DB::transaction(function () use ($post, $data) {
+        return DB::transaction(function () use ($post, $data): Post {
 
             $post->update([
                 'user_id' => $data['user_id'] ?? null,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryIndexRequest;
@@ -62,7 +64,7 @@ class CategoryController extends Controller
             return redirect()
                 ->route('backend.categories.index')
                 ->with('success', "Category '{$category->name}' created successfully.");
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             DB::rollBack();
 
             return back()
@@ -76,7 +78,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-//        $category->loadCount('posts');
+        //        $category->loadCount('posts');
 
         return view('backend.categories.show', [
             'category' => $category,
@@ -114,7 +116,7 @@ class CategoryController extends Controller
             return redirect()
                 ->route('backend.categories.edit', $category)
                 ->with('success', "Category '{$category->name}' updated successfully.");
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             DB::rollBack();
 
             return back()
@@ -134,7 +136,7 @@ class CategoryController extends Controller
             return redirect()
                 ->route('backend.categories.index')
                 ->with('success', "Category '{$category->name}' deleted successfully.");
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return back()
                 ->with('error', 'Category could not be deleted.');
         }
@@ -150,7 +152,7 @@ class CategoryController extends Controller
             return redirect()
                 ->route('backend.categories.index')
                 ->with('success', "Category '{$category->name}' restored successfully.");
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return back()
                 ->with('error', 'Category could not be restored.');
         }
@@ -172,7 +174,7 @@ class CategoryController extends Controller
             return redirect()
                 ->route('backend.categories.index')
                 ->with('success', "Category '{$name}' permanently deleted.");
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             return back()
                 ->with('error', 'Category could not be permanently deleted.');
         }

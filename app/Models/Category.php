@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,6 +19,7 @@ class Category extends Model
         'slug',
         'description',
     ];
+
     public function getRouteKeyName(): string
     {
         return 'slug';
@@ -44,7 +46,8 @@ class Category extends Model
         });
     }
 
-    public function scopeSearch(Builder $query, string $q): Builder
+    #[Scope]
+    protected function search(Builder $query, string $q): Builder
     {
         $q = trim($q);
 
@@ -59,7 +62,8 @@ class Category extends Model
         });
     }
 
-    public function scopeTrashedFilter(Builder $query, ?string $trashed): Builder
+    #[Scope]
+    protected function trashedFilter(Builder $query, ?string $trashed): Builder
     {
         if (! $trashed) {
             return $query;
@@ -72,7 +76,8 @@ class Category extends Model
         };
     }
 
-    public function scopeSortBySafe(Builder $query, string $sort, string $dir): Builder
+    #[Scope]
+    protected function sortBySafe(Builder $query, string $sort, string $dir): Builder
     {
         $allowed = ['id', 'name', 'slug', 'created_at'];
 
