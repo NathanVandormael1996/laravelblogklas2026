@@ -11,15 +11,16 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\PostService;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Format;
+use Intervention\Image\ImageManager;
 use Throwable;
 
 class PostController extends Controller
 {
     public function __construct(protected PostService $postService) {}
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(PostIndexRequest $request)
     {
         $this->authorize('viewAny', Post::class);
@@ -64,9 +65,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $this->authorize('create', Post::class);
@@ -85,23 +83,26 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StorePostRequest $request)
     {
         $this->authorize('create', Post::class);
 
-        $post = $this->postService->create($request->validated());
+        $validated = $request->validated();
+
+        $imageFile = $validated['image'] ?? null;
+        unset($validated['image']);
+
+        $post = $this->postService->create($validated);
+
+        if ($imageFile) {
+            $this->processAndSaveImage($post, $imageFile);
+        }
 
         return redirect()
             ->route('backend.posts.index')
             ->with('success', "Post '{$post->title}' created successfully.");
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Post $post)
     {
         $this->authorize('view', $post);
@@ -113,9 +114,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Post $post)
     {
         $this->authorize('update', $post);
@@ -141,23 +139,26 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatePostRequest $request, Post $post)
     {
         $this->authorize('update', $post);
 
-        $post = $this->postService->update($post, $request->validated());
+        $validated = $request->validated();
+
+        $imageFile = $validated['image'] ?? null;
+        unset($validated['image']);
+
+        $post = $this->postService->update($post, $validated);
+
+        if ($imageFile) {
+            $this->processAndSaveImage($post, $imageFile);
+        }
 
         return redirect()
             ->route('backend.posts.edit', $post)
             ->with('success', "Post '{$post->title}' updated successfully.");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
@@ -174,9 +175,6 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Restore a soft deleted post.
-     */
     public function restore(int $id)
     {
         try {
@@ -195,9 +193,6 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Permanently delete a post.
-     */
     public function forceDelete(int $id)
     {
         try {
@@ -221,5 +216,26 @@ class PostController extends Controller
     protected function canManageAllPosts(): bool
     {
         return in_array(auth()->user()?->role?->name, ['admin', 'editor'], true);
+    }
+
+    protected function processAndSaveImage(Post $post, $file): void
+    {
+        $filename = time().'_'.uniqid().'.jpg';
+        $savePath = 'posts/'.$filename;
+
+        $manager = ImageManager::usingDriver(Driver::class);
+        $image = $manager->decode($file->getPathname());
+
+        $image->scale(width: 1200);
+
+        $encodedImage = $image->encodeUsingFormat(Format::JPEG, 80);
+
+        Storage::disk('public')->put($savePath, $encodedImage->toString());
+
+        if ($post->media) {
+            $post->media()->update(['filename' => $savePath]);
+        } else {
+            $post->media()->create(['filename' => $savePath]);
+        }
     }
 }
